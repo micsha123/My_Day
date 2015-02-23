@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">My Day</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_section1">Actions</string>
+    <string name="title_section2">Journal</string>
+    <string name="title_section3">Graphics</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="empty">Empty</string>
+    <string name="action_add">Add action</string>
+    <string name="done">Done</string>
+    <string name="revert">Revert</string>
+    <string name="enter_label">Enter your action:</string>
+    <string name="edit_label">Edit your action name:</string>
+    <string name="save_item">Do you wanna save action?</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="started">Started</string>
+    <string name="start">Start</string>
+    <string name="on_process">On process..</string>
+    <string name="stoped">Stoped</string>
+
+</resources>

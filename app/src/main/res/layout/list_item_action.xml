@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="50dp"
+              android:weightSum="100"
+              android:descendantFocusability="blocksDescendants"
+              android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/title_action"
+            android:layout_height="match_parent"
+            android:layout_width="100dp"
+            android:textSize="20sp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:paddingLeft="15dp"
+            android:layout_weight="75"
+            android:textColor="#000000"/>
+
+        <com.project.malina.myday.widget.SpecialButton
+            android:id="@+id/button_action"
+            android:textSize="12sp"
+            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_weight="25"
+            android:layout_gravity="right"/>
+</LinearLayout>
