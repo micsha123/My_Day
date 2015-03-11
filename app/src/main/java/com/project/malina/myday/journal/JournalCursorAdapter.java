@@ -11,6 +11,11 @@ import android.widget.TextView;
 import com.project.malina.myday.R;
 import com.project.malina.myday.data.SQLDatabaseHelper;
 
+import org.joda.time.DateTime;
+import org.joda.time.Minutes;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.util.concurrent.TimeUnit;
 
 public class JournalCursorAdapter extends CursorAdapter {
@@ -41,19 +46,27 @@ public class JournalCursorAdapter extends CursorAdapter {
         String aTitle = cursor.getString(cursor.getColumnIndex(cursor.getColumnName(2)));
         title.setText(aTitle);
         date.setText(cursor.getString(cursor.getColumnIndex(cursor.getColumnName(1))));
-        long stopTime = cursor.getLong(cursor.getColumnIndex(cursor.getColumnName(4)));
-        long startTime = cursor.getLong(cursor.getColumnIndex(cursor.getColumnName(3)));
-        if (stopTime == 0){
+        String startTime = cursor.getString(cursor.getColumnIndex(cursor.getColumnName(3)));
+        String stopTime = cursor.getString(cursor.getColumnIndex(cursor.getColumnName(4)));
+        if (stopTime.equals("0")){
             time.setText(R.string.on_process);
         } else{
             if(cursor.isNull(cursor.getColumnIndex(cursor.getColumnName(5)))){
-                databaseHelper.updateJournalTime(aTitle, stopTime - startTime);
+                DateTimeFormatter formatter = DateTimeFormat.forPattern("yy-MM-dd HH:mm:ss");
+                DateTime start = formatter.parseDateTime(startTime);
+                DateTime stop = formatter.parseDateTime(stopTime);
+                Minutes minutes = Minutes.minutesBetween(start, stop);
+                databaseHelper.updateJournalTime(aTitle, minutes.getMinutes());
             }
-            long millis = cursor.getLong(cursor.getColumnIndex(cursor.getColumnName(5)));
+            int minutes = cursor.getInt(cursor.getColumnIndex(cursor.getColumnName(5)));
             time.setText(String.format("%02d:%02d",
-                    TimeUnit.NANOSECONDS.toHours(millis),
-                    TimeUnit.NANOSECONDS.toMinutes(millis) -
-                            TimeUnit.HOURS.toMinutes(TimeUnit.NANOSECONDS.toHours(millis))));
+                    TimeUnit.MINUTES.toHours(minutes),
+                    TimeUnit.MINUTES.toMinutes(minutes) -
+                            TimeUnit.HOURS.toMinutes(TimeUnit.MINUTES.toHours(minutes))));
+//            time.setText(String.format("%02d:%02d",
+//                    TimeUnit.MILLISECONDS.toHours(millis),
+//                    TimeUnit.MILLISECONDS.toMinutes(millis) -
+//                            TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis))));
         }
     }
 

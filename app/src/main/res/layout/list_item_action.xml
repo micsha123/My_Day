@@ -17,7 +17,7 @@
             android:layout_weight="75"
             android:textColor="#000000"/>
 
-        <com.project.malina.myday.widget.SpecialButton
+        <Button
             android:id="@+id/button_action"
             android:textSize="12sp"
             android:layout_height="wrap_content"

@@ -7,8 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 public class SQLDatabaseHelper {
 
@@ -31,12 +32,20 @@ public class SQLDatabaseHelper {
     private DatabaseOpenHelper openHelper;
     private SQLiteDatabase database;
 
-    Calendar c = Calendar.getInstance();
-    SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
-    String formattedDate = df.format(c.getTime());
-//    long fullDate = c.getTimeInMillis();
-    long fullDate = System.nanoTime();
+    DateTime date = DateTime.now();
 
+    public String getCurrentPoint(){
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("yy-MM-dd HH:mm:ss");
+        String pointString = fmt.print(date);
+        return pointString;
+    }
+
+    public String getCurrentDay(){
+        DateTime date = DateTime.now();
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("dd-MM-yy");
+        String dateString = fmt.print(date);
+        return dateString;
+    }
 
     public SQLDatabaseHelper(Context aContext) {
         openHelper = new DatabaseOpenHelper(aContext);
@@ -70,28 +79,20 @@ public class SQLDatabaseHelper {
     public void insertJournalNote(String aTitle) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(COLUMN_ACTION, aTitle);
-        contentValues.put(COLUMN_DATE, formattedDate);
-        contentValues.put(COLUMN_START, fullDate);
+        contentValues.put(COLUMN_DATE, getCurrentDay());
+        contentValues.put(COLUMN_START, getCurrentPoint());
         contentValues.put(COLUMN_STOP, 0);
         database.insert(TABLE_JOURNAL, null, contentValues);
     }
-//
-//    public void updateJournalStopTime(String aTitle, long aTime){
-//        ContentValues values = new ContentValues();
-//        values.put(COLUMN_STOP, aTime);
-//        database.update(TABLE_JOURNAL, values, COLUMN_ACTION + " = ? AND " + COLUMN_TIME
-//                        + " IS NULL AND " + COLUMN_STOP + " = ?", new String[]{aTitle, "0"});
-//    }
-
 
     public void updateJournalStopTime(String aTitle){
         ContentValues values = new ContentValues();
-        values.put(COLUMN_STOP, System.nanoTime());
+        values.put(COLUMN_STOP, getCurrentPoint());
         database.update(TABLE_JOURNAL, values, COLUMN_ACTION + " = ? AND " + COLUMN_TIME
                 + " IS NULL AND " + COLUMN_STOP + " = ?", new String[]{aTitle, "0"});
     }
 
-    public void updateJournalTime(String aTitle, long aTime){
+    public void updateJournalTime(String aTitle, int aTime){
         ContentValues values = new ContentValues();
         values.put(COLUMN_TIME, aTime);
         database.update(TABLE_JOURNAL, values, COLUMN_ACTION + " = ? AND " + COLUMN_TIME + " IS NULL",
