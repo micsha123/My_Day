@@ -81,7 +81,6 @@ public class SQLDatabaseHelper {
         contentValues.put(COLUMN_ACTION, aTitle);
         contentValues.put(COLUMN_DATE, getCurrentDay());
         contentValues.put(COLUMN_START, getCurrentPoint());
-        contentValues.put(COLUMN_STOP, 0);
         database.insert(TABLE_JOURNAL, null, contentValues);
     }
 
@@ -89,7 +88,7 @@ public class SQLDatabaseHelper {
         ContentValues values = new ContentValues();
         values.put(COLUMN_STOP, getCurrentPoint());
         database.update(TABLE_JOURNAL, values, COLUMN_ACTION + " = ? AND " + COLUMN_TIME
-                + " IS NULL AND " + COLUMN_STOP + " = ?", new String[]{aTitle, "0"});
+                + " IS NULL AND " + COLUMN_STOP + " IS NULL", new String[]{aTitle});
     }
 
     public void updateJournalTime(String aTitle, int aTime){
@@ -110,10 +109,22 @@ public class SQLDatabaseHelper {
         return database.rawQuery(buildSQL, null);
     }
 
+    public Cursor getJournalStringForUpdate (String action) {
+        String buildSQL = "SELECT * FROM " + TABLE_JOURNAL +" WHERE action = \"" + action + "\" AND time IS NULL";
+        Log.d(TAG, "getActionData SQL: " + buildSQL);
+        return database.rawQuery(buildSQL, null);
+    }
+
     public Cursor getJournalData() {
         String buildSQL = "SELECT * FROM " + TABLE_JOURNAL;
         Log.d(TAG, "getJournalData SQL: " + buildSQL);
         return database.rawQuery(buildSQL, null);
+    }
+
+    public Cursor getJournalDataForGraph(String actionColumn){
+        String buildSQL = "SELECT * FROM " + TABLE_JOURNAL + " WHERE action = ?";
+        Log.d(TAG, "getJournalData SQL: " + buildSQL);
+        return database.rawQuery(buildSQL, new String[]{actionColumn});
     }
 
     private class DatabaseOpenHelper extends SQLiteOpenHelper {

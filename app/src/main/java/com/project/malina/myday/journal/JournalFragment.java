@@ -16,8 +16,8 @@ import com.project.malina.myday.data.SQLDatabaseHelper;
 
 public class JournalFragment extends Fragment {
 
-    private JournalCursorAdapter customAdapter;
-    private SQLDatabaseHelper databaseHelper;
+    private static JournalCursorAdapter customAdapter;
+    private static SQLDatabaseHelper databaseHelper;
     private ListView listView;
 
     public JournalFragment() {
@@ -60,33 +60,13 @@ public class JournalFragment extends Fragment {
                 listView.setAdapter(customAdapter);
             }
         });
-
         return rootView;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-//        customAdapter.changeCursor(databaseHelper.getJournalData());
+    public static void reloadListView(){
+        customAdapter.changeCursor(databaseHelper.getJournalData());
+        customAdapter.notifyDataSetChanged();
     }
-
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        inflater.inflate(R.menu.menu_actions, menu);
-//        super.onCreateOptionsMenu(menu, inflater);
-//    }
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        int id = item.getItemId();
-//
-//        if (id == R.id.action_add) {
-//            itemDialog(null, null);
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

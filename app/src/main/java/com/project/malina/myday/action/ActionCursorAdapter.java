@@ -12,6 +12,12 @@ import android.widget.Toast;
 
 import com.project.malina.myday.R;
 import com.project.malina.myday.data.SQLDatabaseHelper;
+import com.project.malina.myday.journal.JournalFragment;
+
+import org.joda.time.DateTime;
+import org.joda.time.Minutes;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.util.Calendar;
 
@@ -64,9 +70,18 @@ public class ActionCursorAdapter extends CursorAdapter {
                 if (state.equals("1")){
                     databaseHelper.insertJournalNote(text);
                 } else{
-//                    databaseHelper.updateJournalStopTime(text, c.getTimeInMillis());
                     databaseHelper.updateJournalStopTime(text);
+                    Cursor cursor = databaseHelper.getJournalStringForUpdate(text);
+                    if (cursor.moveToFirst()) {
+                        DateTimeFormatter formatter = DateTimeFormat.forPattern("yy-MM-dd HH:mm:ss");
+                        DateTime start = formatter.parseDateTime(cursor.getString(cursor.getColumnIndex(cursor.getColumnName(3))));
+                        DateTime stop = formatter.parseDateTime(cursor.getString(cursor.getColumnIndex(cursor.getColumnName(4))));
+                        Minutes minutes = Minutes.minutesBetween(start, stop);
+                        databaseHelper.updateJournalTime(text, minutes.getMinutes());
+                    }
+                    cursor.close();
                 }
+                JournalFragment.reloadListView();
                 changeCursor(databaseHelper.getActionData());
             }
         });

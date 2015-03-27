@@ -2,6 +2,7 @@ package com.project.malina.myday.action;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 
 import com.project.malina.myday.R;
 import com.project.malina.myday.data.SQLDatabaseHelper;
+import com.project.malina.myday.graph.GraphActivity;
 
 public class ActionFragment extends Fragment {
 
@@ -55,14 +57,21 @@ public class ActionFragment extends Fragment {
             public boolean onItemLongClick(AdapterView<?> av, final View v, final int pos, long id) {
 
                 final String[] stringArray = {getActivity().getResources().getString(R.string.edit),
+                        getActivity().getResources().getString(R.string.show_graph),
                         getActivity().getResources().getString(R.string.delete) };
                 final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setItems(stringArray, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int item) {
+                        String title = ((TextView) v.findViewById(R.id.title_action)).getText().toString();
                         switch (item){
                             case 0:
-                                String title = ((TextView) v.findViewById(R.id.title_action)).getText().toString();
+                                title = ((TextView) v.findViewById(R.id.title_action)).getText().toString();
                                 itemDialog(title, Long.toString(customAdapter.getItemId(pos)));
+                                break;
+                            case 1:
+                                Intent intent = new Intent(getActivity(), GraphActivity.class);
+                                intent.putExtra("title", title);
+                                getActivity().startActivity(intent);
                                 break;
                             default:
                                 databaseHelper.deleteAction(Long.toString(customAdapter.getItemId(pos)));
